@@ -1,5 +1,7 @@
 package ba.unsa.etf.ra;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -17,5 +19,14 @@ public class Main {
         String path = scanner.nextLine();
 
         InstructionParser instructionParser = new InstructionParser(path);
+        try {
+            instructionParser.parseFile();
+            List<Instruction> instructions = instructionParser.getInstructions();
+            for (Instruction i : instructions) {
+                System.out.println(i.getName() + " " + i.getRd() + " " + i.getRs() + " " + i.getRt());
+            }
+        } catch (InvalidInstructionFileFormat invalidInstructionFileFormat) {
+            System.out.println(invalidInstructionFileFormat.getMessage());
+        }
     }
 }

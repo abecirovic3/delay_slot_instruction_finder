@@ -11,6 +11,9 @@ public class Instruction {
         this.immediate = immediate;
     }
 
+    public Instruction() {
+    }
+
     public String getName() {
         return name;
     }
