@@ -15,5 +15,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         String path = scanner.nextLine();
+
+        InstructionParser instructionParser = new InstructionParser(path);
     }
 }
