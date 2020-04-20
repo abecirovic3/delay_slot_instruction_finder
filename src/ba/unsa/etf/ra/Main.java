@@ -24,8 +24,10 @@ public class Main {
             ArrayList<Instruction> instructions = (ArrayList<Instruction>) instructionParser.getInstructions();
             DelaySlotFiller filler = new DelaySlotFiller();
             instructions = filler.fillDelaySlots(instructions);
-            for (Instruction i : instructions)
+            for (Instruction i : instructions) {
+                if (i.toString() == null) continue;
                 System.out.println(i);
+            }
         } catch (InvalidInstructionFileFormat invalidInstructionFileFormat) {
             System.out.println(invalidInstructionFileFormat.getMessage());
         } catch (ZeroBranchInstructionsException e) {

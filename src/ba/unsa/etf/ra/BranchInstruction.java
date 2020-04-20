@@ -39,7 +39,7 @@ public class BranchInstruction extends Instruction {
     @Override
     public String toString() {
         if (delaySlotInstruction != null)
-            return super.toString() + "\n" + delaySlotInstruction.toString() + " #zadrska";
+            return super.toString() + "\n" + delaySlotInstruction.getInstructionString() + " #zadrska";
         return super.toString();
     }
 }

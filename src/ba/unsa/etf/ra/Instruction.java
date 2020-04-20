@@ -83,6 +83,7 @@ public class Instruction {
 
     @Override
     public String toString() {
+        if (isDelaySlotInstruction) return null;
         return instructionString;
     }
 }

@@ -132,7 +132,7 @@ public class InstructionParser {
     private void setLabelAndNameOfInstruction(Instruction instruction, String[] instructionParts, int indexOfName) {
         instruction.setName(instructionParts[indexOfName].replaceAll("\\s+",""));
         if (indexOfName == 1)
-            instruction.setLabel(instructionParts[0].replaceAll("\\s+",""));
+            instruction.setLabel(instructionParts[0].replaceAll(":", " ").replaceAll("\\s+",""));
     }
 
     private String[] separateOffsetAndRegister(String str) {
