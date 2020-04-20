@@ -22,9 +22,22 @@ public class Main {
             instructionParser.parseFile();
             List<Instruction> instructions = instructionParser.getInstructions();
             for (Instruction i : instructions) {
-                System.out.println(i.getLabel() + " " + i.getName() + " " + i.getSource1() + " " + i.getDestination() + " ");
-
-                System.out.println(i);
+                if (i.getLabel() != null)
+                    System.out.print(i.getLabel());
+                System.out.print(" " + i.getName());
+                if (i.getDestination() != null)
+                    System.out.print(" " + i.getDestination());
+                if (i.getSource1() != null)
+                    System.out.print(" " + i.getSource1());
+                if (i.getSource2() != null)
+                    System.out.print(" " + i.getSource2());
+                if (i.getImmediate() != null)
+                    System.out.print(" " + i.getImmediate());
+                if (i instanceof BranchInstruction) {
+                    BranchInstruction bi = (BranchInstruction) i;
+                    System.out.print(" " + bi.getDestinationLabel());
+                }
+                System.out.println();
             }
         } catch (InvalidInstructionFileFormat invalidInstructionFileFormat) {
             System.out.println(invalidInstructionFileFormat.getMessage());
