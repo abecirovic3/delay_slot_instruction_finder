@@ -1,13 +1,13 @@
 package ba.unsa.etf.ra;
 
 public enum MemoryInstructions {
-    LB ( "add" ),
-    LBU ( "addu" ),
-    LH ( "and" ),
-    LW ( "nor" ),
-    SB ( "or" ),
-    SH ( "slt" ),
-    SW ( "sltu" );
+    LB ( "lb" ),
+    LBU ( "lbu" ),
+    LH ( "lh" ),
+    LW ( "lw" ),
+    SB ( "sb" ),
+    SH ( "sh" ),
+    SW ( "sw" );
 
     private final String description;
 

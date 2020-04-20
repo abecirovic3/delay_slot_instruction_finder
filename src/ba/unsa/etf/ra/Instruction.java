@@ -1,13 +1,15 @@
 package ba.unsa.etf.ra;
 
 public class Instruction {
-    String name, rs, rt, rd, immediate;
+    private String name, source1, source2, destination, label, immediate;
+    private String instructionString;
 
-    public Instruction(String name, String rs, String rt, String rd, String immediate) {
+    public Instruction(String name, String source1, String source2, String destination, String label, String immediate) {
         this.name = name;
-        this.rs = rs;
-        this.rt = rt;
-        this.rd = rd;
+        this.source1 = source1;
+        this.source2 = source2;
+        this.destination = destination;
+        this.label = label;
         this.immediate = immediate;
     }
 
@@ -22,28 +24,36 @@ public class Instruction {
         this.name = name;
     }
 
-    public String getRs() {
-        return rs;
+    public String getSource1() {
+        return source1;
     }
 
-    public void setRs(String rs) {
-        this.rs = rs;
+    public void setSource1(String source1) {
+        this.source1 = source1;
     }
 
-    public String getRt() {
-        return rt;
+    public String getSource2() {
+        return source2;
     }
 
-    public void setRt(String rt) {
-        this.rt = rt;
+    public void setSource2(String source2) {
+        this.source2 = source2;
     }
 
-    public String getRd() {
-        return rd;
+    public String getDestination() {
+        return destination;
     }
 
-    public void setRd(String rd) {
-        this.rd = rd;
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public String getImmediate() {
@@ -52,5 +62,18 @@ public class Instruction {
 
     public void setImmediate(String immediate) {
         this.immediate = immediate;
+    }
+
+    public String getInstructionString() {
+        return instructionString;
+    }
+
+    public void setInstructionString(String instructionString) {
+        this.instructionString = instructionString;
+    }
+
+    @Override
+    public String toString() {
+        return instructionString;
     }
 }

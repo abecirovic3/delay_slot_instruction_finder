@@ -32,16 +32,17 @@ public class InstructionParser {
             e.printStackTrace();
         }
 
-        String instructionString;
+        String row;
 
         while(fileScanner.hasNext()) {
-            instructionString = fileScanner.nextLine();
-            instructionString = instructionString.toLowerCase();
+            row = fileScanner.nextLine();
+            String instructionString = row.toLowerCase();
             String[] strArray = instructionString.split(" ");
             Instruction instruction = getInstructionFromName(strArray);
             if (instruction == null) {
                 throw new InvalidInstructionFileFormat("Prilikom parsiranja datoteke pronadjena je instrukcija neodgovarajuceg formata");
             }
+            instruction.setInstructionString(row);
             instructions.add(instruction);
         }
         fileScanner.close();
@@ -50,63 +51,93 @@ public class InstructionParser {
     private Instruction getInstructionFromName(String[] instructionParts) {
         for (RsRtRdInstructions instructionName : RsRtRdInstructions.values()) {
             if (instructionName.toString().equals(instructionParts[0]))
-                return getRsRtInstruction(instructionParts);
+                return getRsRtRdInstruction(instructionParts, 0);
+            if (instructionName.toString().equals(instructionParts[1]))
+                return getRsRtRdInstruction(instructionParts, 1);
         }
 
         for (MemoryInstructions instructionName : MemoryInstructions.values()) {
             if (instructionName.toString().equals(instructionParts[0]))
-                return getMemoryInstruction(instructionParts);
-        }
-
-        for (JumpInstructions instructionName : JumpInstructions.values()) {
-            if (instructionName.toString().equals(instructionParts[0]))
-                return getJumpInstruction(instructionParts);
+                return getMemoryInstruction(instructionParts, 0);
+            if (instructionName.toString().equals(instructionParts[1]))
+                return getMemoryInstruction(instructionParts, 1);
         }
 
         for (ImmInstructions instructionName : ImmInstructions.values()) {
             if (instructionName.toString().equals(instructionParts[0]))
-                return getImmInstructions(instructionParts);
+                return getImmInstructions(instructionParts, 0);
+            if (instructionName.toString().equals(instructionParts[1]))
+                return getImmInstructions(instructionParts, 1);
         }
 
-        for (BrancRsRtInstructions instructionName : BrancRsRtInstructions.values()) {
+        for (BranchRsRtInstructions instructionName : BranchRsRtInstructions.values()) {
             if (instructionName.toString().equals(instructionParts[0]))
-                return getBranchRsRtInstructions(instructionParts);
-        }
-
-        for (BranchZeroInstructions instructionName : BranchZeroInstructions.values()) {
-            if (instructionName.toString().equals(instructionParts[0]))
-                return getBranchZeroInstructions(instructionParts);
+                return getBranchRsRtInstructions(instructionParts, 0);
+            if (instructionName.toString().equals(instructionParts[1]))
+                return getBranchRsRtInstructions(instructionParts, 1);
         }
         return null;
     }
 
-    private Instruction getBranchZeroInstructions(String[] instructionParts) {
-        return null;
+    private BranchInstruction getBranchRsRtInstructions(String[] instructionParts, int indexOfName) {
+        if (instructionParts.length < 4) return null;
+        BranchInstruction instruction = new BranchInstruction();
+        setLabelAndNameOfInstruction(instruction, instructionParts, indexOfName);
+        instruction.setSource1(instructionParts[1 + indexOfName].replaceAll("\\s+","").replaceAll(",", ""));
+        instruction.setSource2(instructionParts[2 + indexOfName].replaceAll("\\s+","").replaceAll(",", ""));
+        instruction.setDestinationLabel(instructionParts[3 + indexOfName].replaceAll("\\s+","").replaceAll(",", ""));
+        return instruction;
     }
 
-    private Instruction getBranchRsRtInstructions(String[] instructionParts) {
-        return null;
-    }
-
-    private Instruction getImmInstructions(String[] instructionParts) {
-        return null;
-    }
-
-    private Instruction getJumpInstruction(String[] instructionParts) {
-        return null;
-    }
-
-    private Instruction getMemoryInstruction(String[] instructionParts) {
-        return null;
-    }
-
-    private Instruction getRsRtInstruction(String[] instructionParts) {
+    private Instruction getImmInstructions(String[] instructionParts, int indexOfName) {
         if (instructionParts.length < 4) return null;
         Instruction instruction = new Instruction();
-        instruction.setName(instructionParts[0].replaceAll("\\s+",""));
-        instruction.setRd(instructionParts[1].replaceAll("\\s+","").replaceAll(",", ""));
-        instruction.setRs(instructionParts[2].replaceAll("\\s+","").replaceAll(",", ""));
-        instruction.setRt(instructionParts[3].replaceAll("\\s+","").replaceAll(",", ""));
+        setLabelAndNameOfInstruction(instruction, instructionParts, indexOfName);
+        instruction.setDestination(instructionParts[1 + indexOfName].replaceAll("\\s+","").replaceAll(",", ""));
+        instruction.setSource1(instructionParts[2 + indexOfName].replaceAll("\\s+","").replaceAll(",", ""));
+        instruction.setImmediate(instructionParts[3 + indexOfName].replaceAll("\\s+","").replaceAll(",", ""));
         return instruction;
+    }
+
+    private Instruction getMemoryInstruction(String[] instructionParts, int indexOfName) {
+        if (instructionParts.length < 3) return null;
+        Instruction instruction = new Instruction();
+        setLabelAndNameOfInstruction(instruction, instructionParts, indexOfName);
+        if (instruction.getName().startsWith("l")) {    // load instructions
+            instruction.setDestination(instructionParts[1 + indexOfName].replaceAll("\\s+","").replaceAll(",", ""));
+            String[] offsetAndRegister = separateOffsetAndRegister(instructionParts[2 + indexOfName]);
+            if (offsetAndRegister.length < 2) return null;
+            instruction.setSource1(offsetAndRegister[1].replaceAll("\\s+",""));
+            instruction.setImmediate((offsetAndRegister[0].replaceAll("\\s+","")));
+        } else {    // store instructions
+            instruction.setSource1(instructionParts[1 + indexOfName].replaceAll("\\s+","").replaceAll(",", ""));
+            String[] offsetAndRegister = separateOffsetAndRegister(instructionParts[2 + indexOfName]);
+            if (offsetAndRegister.length < 2) return null;
+            instruction.setSource2(offsetAndRegister[1].replaceAll("\\s+",""));
+            instruction.setImmediate(offsetAndRegister[0].replaceAll("\\s+",""));
+        }
+        return instruction;
+    }
+
+    private Instruction getRsRtRdInstruction(String[] instructionParts, int indexOfName) {
+        if (instructionParts.length < 4) return null;
+        Instruction instruction = new Instruction();
+        setLabelAndNameOfInstruction(instruction, instructionParts, indexOfName);
+        instruction.setDestination(instructionParts[1 + indexOfName].replaceAll("\\s+","").replaceAll(",", ""));
+        instruction.setSource1(instructionParts[2 + indexOfName].replaceAll("\\s+","").replaceAll(",", ""));
+        instruction.setSource2(instructionParts[3 + indexOfName].replaceAll("\\s+","").replaceAll(",", ""));
+        return instruction;
+    }
+
+    private void setLabelAndNameOfInstruction(Instruction instruction, String[] instructionParts, int indexOfName) {
+        instruction.setName(instructionParts[indexOfName].replaceAll("\\s+",""));
+        if (indexOfName == 1)
+            instruction.setLabel(instructionParts[0].replaceAll("\\s+",""));
+    }
+
+    private String[] separateOffsetAndRegister(String str) {
+        str = str.replaceAll("\\(", " ");
+        str = str.replaceAll("\\)", " ");
+        return str.split(" ");
     }
 }
