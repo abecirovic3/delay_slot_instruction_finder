@@ -3,6 +3,7 @@ package ba.unsa.etf.ra;
 public class Instruction {
     private String name, source1, source2, destination, label, immediate;
     private String instructionString;
+    private boolean  isDelaySlotInstruction = false;
 
     public Instruction(String name, String source1, String source2, String destination, String label, String immediate) {
         this.name = name;
@@ -70,6 +71,14 @@ public class Instruction {
 
     public void setInstructionString(String instructionString) {
         this.instructionString = instructionString;
+    }
+
+    public boolean isDelaySlotInstruction() {
+        return isDelaySlotInstruction;
+    }
+
+    public void setToDelaySlotInstruction(boolean delaySlotInstruction) {
+        isDelaySlotInstruction = delaySlotInstruction;
     }
 
     @Override

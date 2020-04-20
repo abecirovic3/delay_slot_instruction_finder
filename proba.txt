@@ -1,0 +1,4 @@
+add r1, r2, r3
+beq r4, r5, labela
+sll t1, t2, 2
+labela lw r1, 0(r1)
