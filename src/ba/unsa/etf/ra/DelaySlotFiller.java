@@ -32,25 +32,63 @@ public class DelaySlotFiller {
     }
 
     private Instruction findInstructionOnBranchDestination(Instruction branchInstruction) {
-        return null;
+        // if the branch destination is before branch...
+        Instruction instructionOnBranchDestination = getDestinationInstructionBeforeBranch(branchInstruction);
+        boolean found = false;
+        if (instructionOnBranchDestination != null) {
+            for (int i = instructions.indexOf(branchInstruction); i < instructions.size(); i++) {
+                if (instructions.get(i).dependsOn(instructionOnBranchDestination)) return null;
+            }
+            found = true;
+        }
+
+        if (!found) {
+            // if the branch destination is after the branch...
+            instructionOnBranchDestination = getDestinationInstructionAfterBranch(branchInstruction);
+            if (instructionOnBranchDestination != null) {
+                for (int i = instructions.indexOf(branchInstruction); i < instructions.indexOf(instructionOnBranchDestination); i++) {
+                    if (instructions.get(i).dependsOn(instructionOnBranchDestination)) return null;
+                }
+            }
+        }
+
+        if (instructionOnBranchDestination != null &&!(instructionOnBranchDestination instanceof BranchInstruction)
+                && !instructionOnBranchDestination.isDelaySlotInstruction()) {
+            instructionOnBranchDestination.setToDelaySlotInstruction(true);
+            if (instructions.indexOf(instructionOnBranchDestination) < instructions.size() - 1)
+                instructions.get(instructions.indexOf(instructionOnBranchDestination) + 1).setLabel(instructionOnBranchDestination.getLabel());
+            instructionOnBranchDestination.setLabel("");
+
+        }
+        return instructionOnBranchDestination;
     }
 
     private Instruction findInstructionBeforeBranch(Instruction branchInstruction) {
-        boolean branchDestinationIsAfterInstruction = false;
-        for(int i = instructions.indexOf(branchInstruction) + 1; i < instructions.size(); i++) {
-            String label = instructions.get(i).getLabel();
-            if (label != null && label.equals(((BranchInstruction) branchInstruction).getDestinationLabel())) {
-                branchDestinationIsAfterInstruction = true;
-                break;
-            }
-        }
-        if (branchDestinationIsAfterInstruction == false) return null;
+        if (getDestinationInstructionAfterBranch(branchInstruction) == null) return null;
         for (int i = 0; i < instructions.indexOf(branchInstruction); i++) {
-            String iDestinaton = instructions.get(i).getDestination();
-            if (!iDestinaton.equals(branchInstruction.getSource1()) && !iDestinaton.equals(branchInstruction.getSource2())) {
+            if (!branchInstruction.dependsOn(instructions.get(i)) && !(instructions.get(i) instanceof BranchInstruction)
+                    && !instructions.get(i).isDelaySlotInstruction()) {
                 instructions.get(i).setToDelaySlotInstruction(true);
                 return instructions.get(i);
             }
+        }
+        return null;
+    }
+
+    private Instruction getDestinationInstructionAfterBranch(Instruction branchInstruction) {
+        for(int i = instructions.indexOf(branchInstruction) + 1; i < instructions.size(); i++) {
+            String label = instructions.get(i).getLabel();
+            if (label != null && label.equals(((BranchInstruction) branchInstruction).getDestinationLabel()))
+                return instructions.get(i);
+        }
+        return null;
+    }
+
+    private Instruction getDestinationInstructionBeforeBranch(Instruction branchInstruction) {
+        for (int i = 0; i < instructions.indexOf(branchInstruction); i++) {
+            String label = instructions.get(i).getLabel();
+            if (label != null && label.equals(((BranchInstruction) branchInstruction).getDestinationLabel()))
+                return instructions.get(i);
         }
         return null;
     }

@@ -17,7 +17,9 @@ public class BranchInstruction extends Instruction {
     }
 
     public BranchInstruction() {
-
+        super();
+        destinationLabel = "";
+        delaySlotInstruction = null;
     }
 
     public String getDestinationLabel() {

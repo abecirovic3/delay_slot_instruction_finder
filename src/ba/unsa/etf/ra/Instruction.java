@@ -15,6 +15,13 @@ public class Instruction {
     }
 
     public Instruction() {
+        name = "";
+        source1 = "";
+        source2 = "";
+        destination = "";
+        label = "";
+        immediate = "";
+        instructionString = "";
     }
 
     public String getName() {
@@ -85,5 +92,12 @@ public class Instruction {
     public String toString() {
         if (isDelaySlotInstruction) return null;
         return instructionString;
+    }
+
+    public boolean dependsOn(Instruction instruction) {
+        if (this.source1.equals(instruction.destination) || this.source2.equals(instruction.destination)) return true;
+        return false;
+//        return !(this.source1.equals(instruction.destination))
+//                || !(this.source2.equals(instruction.destination));
     }
 }
