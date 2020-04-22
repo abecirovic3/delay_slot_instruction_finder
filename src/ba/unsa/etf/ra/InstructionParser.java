@@ -49,28 +49,28 @@ public class InstructionParser {
     }
 
     private Instruction getInstructionFromName(String[] instructionParts) {
-        for (RsRtRdInstructions instructionName : RsRtRdInstructions.values()) {
+        for (InstructionType.RsRtRdInstructions instructionName : InstructionType.RsRtRdInstructions.values()) {
             if (instructionName.toString().equals(instructionParts[0]))
                 return getRsRtRdInstruction(instructionParts, 0);
             if (instructionName.toString().equals(instructionParts[1]))
                 return getRsRtRdInstruction(instructionParts, 1);
         }
 
-        for (MemoryInstructions instructionName : MemoryInstructions.values()) {
+        for (InstructionType.MemoryInstructions instructionName : InstructionType.MemoryInstructions.values()) {
             if (instructionName.toString().equals(instructionParts[0]))
                 return getMemoryInstruction(instructionParts, 0);
             if (instructionName.toString().equals(instructionParts[1]))
                 return getMemoryInstruction(instructionParts, 1);
         }
 
-        for (ImmInstructions instructionName : ImmInstructions.values()) {
+        for (InstructionType.ImmInstructions instructionName : InstructionType.ImmInstructions.values()) {
             if (instructionName.toString().equals(instructionParts[0]))
                 return getImmInstructions(instructionParts, 0);
             if (instructionName.toString().equals(instructionParts[1]))
                 return getImmInstructions(instructionParts, 1);
         }
 
-        for (BranchRsRtInstructions instructionName : BranchRsRtInstructions.values()) {
+        for (InstructionType.BranchRsRtInstructions instructionName : InstructionType.BranchRsRtInstructions.values()) {
             if (instructionName.toString().equals(instructionParts[0]))
                 return getBranchRsRtInstructions(instructionParts, 0);
             if (instructionName.toString().equals(instructionParts[1]))
