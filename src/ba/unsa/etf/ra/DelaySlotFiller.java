@@ -85,7 +85,7 @@ public class DelaySlotFiller {
             // if the branch destination is after the branch...
             instructionOnBranchDestination = getDestinationInstructionAfterBranch(branchInstruction);
             if (instructionOnBranchDestination != null) {
-                for (int i = instructions.indexOf(branchInstruction); i < instructions.indexOf(instructionOnBranchDestination); i++) {
+                for (int i = instructions.indexOf(branchInstruction) + 1; i < instructions.indexOf(instructionOnBranchDestination); i++) {
                     if (instructions.get(i).dependsOn(instructionOnBranchDestination)) return null;
                 }
             }
