@@ -15,7 +15,7 @@ public class DelaySlotFiller {
                     fillerInstruction = findInstructionOnBranchDestination(i);
                 }
                 if (fillerInstruction == null) {
-                    fillerInstruction = findInstructionAfterBranch();
+                    fillerInstruction = findInstructionAfterBranch(i);
                 }
                 ((BranchInstruction) i).setDelaySlotInstruction(fillerInstruction);
                 branchInstructionsCounter++;
@@ -27,7 +27,43 @@ public class DelaySlotFiller {
         return instructions;
     }
 
-    private Instruction findInstructionAfterBranch() {
+    private Instruction findInstructionAfterBranch(Instruction branchInstruction) {
+        Instruction instructionOnBranchDestination = getDestinationInstructionBeforeBranch(branchInstruction);
+        if (instructionOnBranchDestination != null) {
+            for (int i = instructions.indexOf(branchInstruction) + 1; i < instructions.size(); i++) {
+                boolean isSuitable = true;
+                Instruction candidate = instructions.get(i);
+                for (int j = instructions.indexOf(instructionOnBranchDestination); j < instructions.indexOf(branchInstruction); j++) {
+                    if (instructions.get(j).dependsOn(candidate)) {
+                        isSuitable = false;
+                        break;
+                    }
+                }
+                if (isSuitable && !(candidate instanceof BranchInstruction) && !candidate.isDelaySlotInstruction()) {
+                    instructions.get(i).setToDelaySlotInstruction(true);
+                    fixLabels(instructions.get(i));
+                    return instructions.get(i);
+                }
+            }
+        }
+        instructionOnBranchDestination = getDestinationInstructionAfterBranch(branchInstruction);
+        if (instructionOnBranchDestination != null) {
+            for (int i = instructions.indexOf(branchInstruction) + 1; i < instructions.indexOf(instructionOnBranchDestination); i++) {
+                boolean isSuitable = true;
+                Instruction candidate = instructions.get(i);
+                for (int j = instructions.indexOf(instructionOnBranchDestination); j < instructions.size(); j++) {
+                    if (instructions.get(j).dependsOn(candidate)) {
+                        isSuitable = false;
+                        break;
+                    }
+                }
+                if (isSuitable && !(candidate instanceof BranchInstruction) && !candidate.isDelaySlotInstruction()) {
+                    instructions.get(i).setToDelaySlotInstruction(true);
+                    fixLabels(instructions.get(i));
+                    return instructions.get(i);
+                }
+            }
+        }
         return null;
     }
 
@@ -52,13 +88,10 @@ public class DelaySlotFiller {
             }
         }
 
-        if (instructionOnBranchDestination != null &&!(instructionOnBranchDestination instanceof BranchInstruction)
+        if (instructionOnBranchDestination != null && !(instructionOnBranchDestination instanceof BranchInstruction)
                 && !instructionOnBranchDestination.isDelaySlotInstruction()) {
             instructionOnBranchDestination.setToDelaySlotInstruction(true);
-            if (instructions.indexOf(instructionOnBranchDestination) < instructions.size() - 1)
-                instructions.get(instructions.indexOf(instructionOnBranchDestination) + 1).setLabel(instructionOnBranchDestination.getLabel());
-            instructionOnBranchDestination.setLabel("");
-
+            fixLabels(instructionOnBranchDestination);
         }
         return instructionOnBranchDestination;
     }
@@ -69,6 +102,7 @@ public class DelaySlotFiller {
             if (!branchInstruction.dependsOn(instructions.get(i)) && !(instructions.get(i) instanceof BranchInstruction)
                     && !instructions.get(i).isDelaySlotInstruction()) {
                 instructions.get(i).setToDelaySlotInstruction(true);
+                fixLabels(instructions.get(i));
                 return instructions.get(i);
             }
         }
@@ -91,5 +125,21 @@ public class DelaySlotFiller {
                 return instructions.get(i);
         }
         return null;
+    }
+
+    private void fixLabels(Instruction delaySlotInstruction) {
+        if (delaySlotInstruction.getLabel().equals("")) return;
+        int indexOfDelaySlot = instructions.indexOf(delaySlotInstruction);
+        if (indexOfDelaySlot < instructions.size() - 1) {
+            Instruction nextInsruction = instructions.get(indexOfDelaySlot + 1);
+            if (!nextInsruction.getLabel().equals("")) {
+                nextInsruction.setInstructionString(nextInsruction.getInstructionString().replace(nextInsruction.getLabel(), nextInsruction.getLabel() + ": " + delaySlotInstruction.getLabel()));
+            } else {
+                nextInsruction.setLabel(delaySlotInstruction.getLabel());
+                nextInsruction.setInstructionString(delaySlotInstruction.getLabel() + ": " + nextInsruction.getInstructionString());
+            }
+        }
+        delaySlotInstruction.setInstructionString(delaySlotInstruction.getInstructionString().replace(delaySlotInstruction.getLabel() + ":", ""));
+        delaySlotInstruction.setLabel("");
     }
 }

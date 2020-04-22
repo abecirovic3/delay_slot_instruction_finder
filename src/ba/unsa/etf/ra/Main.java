@@ -27,6 +27,7 @@ public class Main {
             for (Instruction i : instructions) {
                 if (i.toString() == null) continue;
                 System.out.println(i);
+                //System.out.println("labela: " + i.getLabel());
             }
         } catch (InvalidInstructionFileFormat invalidInstructionFileFormat) {
             System.out.println(invalidInstructionFileFormat.getMessage());
