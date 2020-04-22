@@ -1,7 +1,6 @@
 package ba.unsa.etf.ra;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -24,14 +23,16 @@ public class Main {
             ArrayList<Instruction> instructions = (ArrayList<Instruction>) instructionParser.getInstructions();
             DelaySlotFiller filler = new DelaySlotFiller();
             instructions = filler.fillDelaySlots(instructions);
-            for (Instruction i : instructions) {
-                if (i.toString() == null) continue;
-                System.out.println(i);
-                //System.out.println("labela: " + i.getLabel());
-            }
+
+            System.out.println("Instrukcije zadrške su pronađene, unesite putanju do datoteke u koju želite upisati dobijenu sekvencu:");
+            path = scanner.nextLine();
+
+            InstructionWriter instructionWriter = new InstructionWriter();
+            instructionWriter.writeInstructionsToFile(instructions, path);
+
         } catch (InvalidInstructionFileFormat invalidInstructionFileFormat) {
             System.out.println(invalidInstructionFileFormat.getMessage());
-        } catch (ZeroBranchInstructionsException e) {
+        } catch (DelaySlotFillerException e) {
             System.out.println(e.getMessage());
         }
     }

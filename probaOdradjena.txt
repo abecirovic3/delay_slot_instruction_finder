@@ -1,0 +1,5 @@
+add $s1, $s2, $s3
+lb $s2, 10($s1)
+beq $t0, $t7, labela
+sll $s1, $s2, $t3
+labela: sw $s2, 0($s4)

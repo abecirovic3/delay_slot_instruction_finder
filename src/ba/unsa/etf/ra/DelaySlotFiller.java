@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class DelaySlotFiller {
     ArrayList<Instruction> instructions = new ArrayList<>();
 
-    public ArrayList<Instruction> fillDelaySlots(ArrayList<Instruction> instructions) throws ZeroBranchInstructionsException {
+    public ArrayList<Instruction> fillDelaySlots(ArrayList<Instruction> instructions) throws DelaySlotFillerException {
         this.instructions = instructions;
-        int branchInstructionsCounter = 0;
+        int branchInstructionsCounter = 0, failedFillings = 0;
         for(Instruction i : instructions) {
             if (i instanceof BranchInstruction) {
                 Instruction fillerInstruction = findInstructionBeforeBranch(i);
@@ -17,12 +17,15 @@ public class DelaySlotFiller {
                 if (fillerInstruction == null) {
                     fillerInstruction = findInstructionAfterBranch(i);
                 }
+                if (fillerInstruction == null) failedFillings++;
                 ((BranchInstruction) i).setDelaySlotInstruction(fillerInstruction);
                 branchInstructionsCounter++;
             }
         }
         if (branchInstructionsCounter == 0)
-            throw new ZeroBranchInstructionsException("U datoj sekvenci nema instruckcija grananja");
+            throw new DelaySlotFillerException("U datoj sekvenci nema instruckcija grananja");
+        if (failedFillings == branchInstructionsCounter)
+            throw new DelaySlotFillerException("Niti za jednu instrukciju grananja nije pronađena instrukcija zadrške");
 
         return instructions;
     }
