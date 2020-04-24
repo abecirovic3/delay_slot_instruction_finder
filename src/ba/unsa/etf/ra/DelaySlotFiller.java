@@ -95,8 +95,9 @@ public class DelaySlotFiller {
                 && !instructionOnBranchDestination.isDelaySlotInstruction()) {
             instructionOnBranchDestination.setToDelaySlotInstruction(true);
             fixLabels(instructionOnBranchDestination);
+            return instructionOnBranchDestination;
         }
-        return instructionOnBranchDestination;
+        return null;
     }
 
     private Instruction findInstructionBeforeBranch(Instruction branchInstruction) {

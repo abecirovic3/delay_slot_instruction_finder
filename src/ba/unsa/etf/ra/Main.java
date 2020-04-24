@@ -8,8 +8,8 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Pozdrav\nPrije nego što navedete putanju do datoteke koja sadrži sekvencu instrukcija\n" +
-                "važna napomena: Format instrukcija mora biti takav da je između svake riječi barem jedan razmak, te " +
-                "da su operandi instrukcije pored razmaka razdvojeni i zarezima!\n" +
+                "važna napomena: Format instrukcija mora biti takav da je između svake riječi barem jedan razmak,\n" +
+                "da su operandi instrukcije pored razmaka razdvojeni i zarezima,\ni da je sekvenca napisana malim slovima\n" +
                 "Takođe je bitno da su sve instrukcije u korektnom formatu npr. add $s0, $s1, $s2 | sub r1, r2, r3");
 
         System.out.println("Unesite putanju do datoteke sa sekvencom instrukcija:");
@@ -24,9 +24,6 @@ public class Main {
             ArrayList<Instruction> instructions = (ArrayList<Instruction>) instructionParser.getInstructions();
             DelaySlotFiller filler = new DelaySlotFiller();
             instructions = filler.fillDelaySlots(instructions);
-
-            //System.out.println("Instrukcije zadrške su pronađene, unesite putanju do datoteke u koju želite upisati dobijenu sekvencu:");
-            //path = scanner.nextLine();
 
             InstructionWriter instructionWriter = new InstructionWriter();
             path = instructionWriter.writeInstructionsToFile(instructions, path);

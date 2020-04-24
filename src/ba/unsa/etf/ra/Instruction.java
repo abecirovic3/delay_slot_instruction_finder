@@ -97,7 +97,5 @@ public class Instruction {
     public boolean dependsOn(Instruction instruction) {
         if (this.source1.equals(instruction.destination) || this.source2.equals(instruction.destination)) return true;
         return false;
-//        return !(this.source1.equals(instruction.destination))
-//                || !(this.source2.equals(instruction.destination));
     }
 }
