@@ -103,11 +103,18 @@ public class DelaySlotFiller {
     private Instruction findInstructionBeforeBranch(Instruction branchInstruction) {
         if (getDestinationInstructionAfterBranch(branchInstruction) == null) return null;
         for (int i = 0; i < instructions.indexOf(branchInstruction); i++) {
-            if (!branchInstruction.dependsOn(instructions.get(i)) && !(instructions.get(i) instanceof BranchInstruction)
-                    && !instructions.get(i).isDelaySlotInstruction()) {
-                instructions.get(i).setToDelaySlotInstruction(true);
-                fixLabels(instructions.get(i));
-                return instructions.get(i);
+            Instruction candidate = instructions.get(i);
+            boolean isSuitable = true;
+            for (int j = i + 1; j <= instructions.indexOf(branchInstruction); j++) {
+                if (instructions.get(i).dependsOn(candidate)) {
+                    isSuitable = false;
+                    break;
+                }
+            }
+            if (isSuitable && !(instructions.get(i) instanceof BranchInstruction) && !instructions.get(i).isDelaySlotInstruction()) {
+                candidate.setToDelaySlotInstruction(true);
+                fixLabels(candidate);
+                return candidate;
             }
         }
         return null;
