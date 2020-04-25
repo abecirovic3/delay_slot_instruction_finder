@@ -11,31 +11,34 @@ public class Main {
                 "važna napomena: Format instrukcija mora biti takav da je između svake riječi barem jedan razmak,\n" +
                 "da su operandi instrukcije pored razmaka razdvojeni i zarezima,\ni da je sekvenca napisana malim slovima\n" +
                 "Takođe je bitno da su sve instrukcije u korektnom formatu npr. add $s0, $s1, $s2 | sub r1, r2, r3");
+        for (;;) {
+            System.out.println("Unesite putanju do datoteke sa sekvencom instrukcija ili k za kraj:");
 
-        System.out.println("Unesite putanju do datoteke sa sekvencom instrukcija:");
+            Scanner scanner = new Scanner(System.in);
 
-        Scanner scanner = new Scanner(System.in);
+            String path = scanner.nextLine();
 
-        String path = scanner.nextLine();
+            if (path.equals("k") || path.equals("K")) break;
 
-        InstructionParser instructionParser = new InstructionParser(path);
-        try {
-            instructionParser.parseFile();
-            ArrayList<Instruction> instructions = (ArrayList<Instruction>) instructionParser.getInstructions();
-            DelaySlotFiller filler = new DelaySlotFiller();
-            instructions = filler.fillDelaySlots(instructions);
+            InstructionParser instructionParser = new InstructionParser(path);
+            try {
+                instructionParser.parseFile();
+                ArrayList<Instruction> instructions = (ArrayList<Instruction>) instructionParser.getInstructions();
+                DelaySlotFiller filler = new DelaySlotFiller();
+                instructions = filler.fillDelaySlots(instructions);
 
-            InstructionWriter instructionWriter = new InstructionWriter();
-            path = instructionWriter.writeInstructionsToFile(instructions, path);
+                InstructionWriter instructionWriter = new InstructionWriter();
+                path = instructionWriter.writeInstructionsToFile(instructions, path);
 
-            System.out.println("Sekvenca je izgenerisana, provjerite sadržaj datoteke " + path);
+                System.out.println("Sekvenca je izgenerisana, provjerite sadržaj datoteke " + path);
 
-        } catch (InvalidInstructionFileFormat invalidInstructionFileFormat) {
-            System.out.println(invalidInstructionFileFormat.getMessage());
-        } catch (DelaySlotFillerException e) {
-            System.out.println(e.getMessage());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+            } catch (InvalidInstructionFileFormat invalidInstructionFileFormat) {
+                System.out.println(invalidInstructionFileFormat.getMessage());
+            } catch (DelaySlotFillerException e) {
+                System.out.println(e.getMessage());
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 }

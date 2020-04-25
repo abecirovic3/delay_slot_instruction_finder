@@ -1,0 +1,12 @@
+forloop: beq $s2, $a2, endforloop
+sll $t0, $s2, 2
+add $t0, $t0, $a0
+lw $t0, 0($t0)
+bne $a1, $0, endif1
+sub $t1, $t0, $s1
+add $s1, $t0, $0
+endif1: beq $a1, $0, endif2
+sub $t1, $t0, $s1
+add $s1, $t0, $0
+endif2: addi $s2, $s2, 1
+endforloop: or $s1, $s2, $s3

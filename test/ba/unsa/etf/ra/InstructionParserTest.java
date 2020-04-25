@@ -2,6 +2,7 @@ package ba.unsa.etf.ra;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,7 +36,7 @@ class InstructionParserTest {
             }
             assertEquals("add s1 s2 s3 \nlabela1: beq s1 s2 labela2 \nlw s1 s6 10 \nori t1 t2 100 \nbne s3 s8 labela1 \nsw t1 t3 0 " +
                     "\nsll a0 a1 4 \n", result);
-        } catch (InvalidInstructionFileFormat invalidInstructionFileFormat) {
+        } catch (InvalidInstructionFileFormat | FileNotFoundException invalidInstructionFileFormat) {
             System.out.println(invalidInstructionFileFormat.getMessage());
         }
     }

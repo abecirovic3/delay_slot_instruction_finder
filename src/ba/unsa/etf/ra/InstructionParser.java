@@ -23,13 +23,12 @@ public class InstructionParser {
         this.instructions = instructions;
     }
 
-    public void parseFile() throws InvalidInstructionFileFormat {
+    public void parseFile() throws InvalidInstructionFileFormat, FileNotFoundException {
         Scanner fileScanner = null;
         try {
             fileScanner = new Scanner(new FileReader(filePath));
         } catch (FileNotFoundException e) {
-            System.out.println("Problemi s otvaranjem datoteke");
-            e.printStackTrace();
+            throw new FileNotFoundException("Problemi s otvaranjem datoteke");
         }
 
         String row;
