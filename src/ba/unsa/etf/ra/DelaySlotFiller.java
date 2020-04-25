@@ -106,7 +106,7 @@ public class DelaySlotFiller {
             Instruction candidate = instructions.get(i);
             boolean isSuitable = true;
             for (int j = i + 1; j <= instructions.indexOf(branchInstruction); j++) {
-                if (instructions.get(i).dependsOn(candidate)) {
+                if (instructions.get(j).dependsOn(candidate)) {
                     isSuitable = false;
                     break;
                 }
