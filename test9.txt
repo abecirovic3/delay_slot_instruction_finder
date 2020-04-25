@@ -1,5 +1,0 @@
-bne $s1, $s2, L1
-or $t1, $t2, $t3
-L1: beq $k1, $k2, L2
-sw $s2, 10($t1)
-L2: add $a0, $a1, $t2

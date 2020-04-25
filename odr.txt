@@ -1,6 +1,0 @@
-label: lw r1, 0(r1)
-sub r4, t1, t7
-add r4, r2, r3
-beq r4, r5, label
- sll k8, r1, 2 #zadrska
-zenlabela: sub t1, t1, r8

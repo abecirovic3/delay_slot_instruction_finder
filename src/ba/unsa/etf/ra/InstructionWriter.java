@@ -14,7 +14,7 @@ public class InstructionWriter {
         String path = System.getProperty("user.home") + System.getProperty("file.separator") +
                 "izgenerisaneSekvence" + System.getProperty("file.separator") + "Izgenerisani_" + f.getName();
         if (!file.canWrite())
-            path = System.getProperty("user.dir") + f.getName();
+            path = System.getProperty("user.dir") +  System.getProperty("file.separator") + "Izgenerisani_" + f.getName();
         try {
             FileWriter fileWriter = new FileWriter(path);
             for (Instruction i : instructions) {
