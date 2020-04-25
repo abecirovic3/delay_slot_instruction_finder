@@ -23,7 +23,7 @@ public class InstructionParser {
         this.instructions = instructions;
     }
 
-    public void parseFile() throws InvalidInstructionFileFormat, FileNotFoundException {
+    public void parseFile() throws InvalidInstructionFileFormatException, FileNotFoundException {
         Scanner fileScanner = null;
         try {
             fileScanner = new Scanner(new FileReader(filePath));
@@ -39,7 +39,7 @@ public class InstructionParser {
             String[] strArray = instructionString.split(" ");
             Instruction instruction = getInstructionFromName(strArray);
             if (instruction == null) {
-                throw new InvalidInstructionFileFormat("Prilikom parsiranja datoteke pronadjena je instrukcija neodgovarajuceg formata");
+                throw new InvalidInstructionFileFormatException("Prilikom parsiranja datoteke pronadjena je instrukcija neodgovarajuceg formata");
             }
             instruction.setInstructionString(row);
             instructions.add(instruction);

@@ -32,8 +32,8 @@ public class Main {
 
                 System.out.println("Sekvenca je izgenerisana, provjerite sadržaj datoteke " + path);
 
-            } catch (InvalidInstructionFileFormat invalidInstructionFileFormat) {
-                System.out.println(invalidInstructionFileFormat.getMessage());
+            } catch (InvalidInstructionFileFormatException invalidInstructionFileFormatException) {
+                System.out.println(invalidInstructionFileFormatException.getMessage());
             } catch (DelaySlotFillerException e) {
                 System.out.println(e.getMessage());
             } catch (IOException e) {
