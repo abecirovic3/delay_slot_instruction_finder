@@ -75,7 +75,7 @@ public class DelaySlotFiller {
         Instruction instructionOnBranchDestination = getDestinationInstructionBeforeBranch(branchInstruction);
         boolean found = false;
         if (instructionOnBranchDestination != null) {
-            for (int i = instructions.indexOf(branchInstruction); i < instructions.size(); i++) {
+            for (int i = instructions.indexOf(branchInstruction) + 1; i < instructions.size(); i++) {
                 if (instructions.get(i).dependsOn(instructionOnBranchDestination)) return null;
             }
             found = true;
